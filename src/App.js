@@ -1,46 +1,19 @@
-import './App.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearData, fetchData, incrementId, decrementId, inputId } from './features/dataSlice';
-import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './components/homepage';
+import Gallery from './components/gallery';
+import MusicDetailPage from './components/gallerydetail';
 
-function App(props) {
-  const dispatch = useDispatch();
-  const data = useSelector((state) => state.data);
-
-  const renderImg = () => {
-    if(data.apiData) {
-      return <img style={{'width': '100vw'}} src={data.apiData.primaryImage} alt={data.apiData.title} />
-    } else {
-      return <p>image here</p>
-    }
-  }
-
-  useEffect(() => {
-    dispatch(fetchData());
-  }, [props.objectId, dispatch]);
-
+function App() {
   return (
-    <div className="App">
-      <div>
-        <button onClick={() => dispatch(fetchData())}>Thunk!</button>
-        <button onClick={() => dispatch(clearData())}>Clear</button>
-        <button onClick={() => dispatch(incrementId())}>Next</button>
-        <button onClick={() => dispatch(decrementId())}>Back</button>
-      </div>
-      <input value={data.objectId} onChange={(e) => {
-        dispatch(inputId(Number(e.target.value)))
-      }} />
-      <div>
-        {data.objectId}
-        {renderImg()}
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/music/:id" element={<MusicDetailPage />} />
+      </Routes>
+    </Router>
   );
 }
 
-const mapStateToProps = (state) => ({ 
-  objectId: state.data.objectId 
-});
-
-export default connect(mapStateToProps)(App);
+export default App;
